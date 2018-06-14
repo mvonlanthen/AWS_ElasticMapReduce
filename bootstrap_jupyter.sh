@@ -19,7 +19,6 @@ set -x -e
 # - - - - - - - - - - - - - User Parameters - - - - - - - - - - - - - - - - - # 
 JUPYTER_PASSWORD=${1:-"jupyterPassword"}
 NOTEBOOK_DIR=${2:-"s3://spark-cluster-02a/notebooks/"}
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 
 # home backup
@@ -61,9 +60,10 @@ echo bootstrap_conda.sh completed. PATH now: $PATH
 export PYSPARK_PYTHON="/home/hadoop/conda/bin/python3.5"
 
 # update the bashrc
-# this is useful if you stop the jupyter notebook deamon and restart the notebook without the 
-# deamon or run as python script with PySpark elements in it. PySpark script can also be launch 
-# with the "PySpark" command.
+# this is useful if you stop the jupyter notebook deamon and restart the 
+# notebook without the deamon or run as python script with PySpark elements 
+# in it. PySpark script can also be launch with the "PySpark" command.
+# PS: I am note sure which line is absolutly necessary...
 echo '' >> $HOME/.bashrc
 echo '# Export PySpark. WARNING, your py4j version might change!' >> $HOME/.bashrc
 echo 'export PYSPARK_PYTHON="/home/hadoop/conda/bin/python3.5"' >> $HOME/.bashrc
@@ -72,8 +72,7 @@ echo 'export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.10.6-src.zip:$PYTHONPATH' 
 echo 'export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH' >> $HOME/.bashrc
 
 
-############### -------------- master node -------------- ###############
-
+# - - - - - - - - - - - - - On the Master Node  - - - - - - - - - - - - - - - # 
 IS_MASTER=false
 if grep isMaster /mnt/var/lib/info/instance.json | grep true;
 then
