@@ -1,8 +1,26 @@
 #!/usr/bin/env bash
+
+# Purpose
+# -------
+# Install anaconda and Jupyter notebook on EMR cluster. This script must be run 
+# as a bootstrap at the cluster creation.
+#
+# Don't forget to update the section "User Parameter"
+#
+# This script is based on this one:
+# https://gist.github.com/nicor88/5260654eb26f6118772551861880dd67
+#
+# TO DO:
+# - update to the latest miniconda
+
+# Start
 set -x -e
 
+# - - - - - - - - - - - - - User Parameters - - - - - - - - - - - - - - - - - # 
 JUPYTER_PASSWORD=${1:-"jupyterPassword"}
 NOTEBOOK_DIR=${2:-"s3://spark-cluster-02a/notebooks/"}
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 
 # home backup
 if [ ! -d /mnt/home_backup ]; then
@@ -17,6 +35,8 @@ if [ ! -d /mnt/home ]; then
 fi
 
 # Install conda
+# Miniconda is install because it's faster to install than Anaconda and smaller
+# TO DO: update to the latest miniconda
 wget https://repo.continuum.io/miniconda/Miniconda3-4.2.12-Linux-x86_64.sh -O /home/hadoop/miniconda.sh \
     && /bin/bash ~/miniconda.sh -b -p $HOME/conda
 
@@ -41,6 +61,9 @@ echo bootstrap_conda.sh completed. PATH now: $PATH
 export PYSPARK_PYTHON="/home/hadoop/conda/bin/python3.5"
 
 # update the bashrc
+# this is useful if you stop the jupyter notebook deamon and restart the notebook without the 
+# deamon or run as python script with PySpark elements in it. PySpark script can also be launch 
+# with the "PySpark" command.
 echo '' >> $HOME/.bashrc
 echo '# Export PySpark. WARNING, your py4j version might change!' >> $HOME/.bashrc
 echo 'export PYSPARK_PYTHON="/home/hadoop/conda/bin/python3.5"' >> $HOME/.bashrc
