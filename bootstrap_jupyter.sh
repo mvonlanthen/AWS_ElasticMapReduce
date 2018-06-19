@@ -3,7 +3,8 @@
 # Purpose
 # -------
 # Install anaconda and Jupyter notebook on EMR cluster. This script must be run 
-# as a bootstrap at the cluster creation.
+# as a bootstrap at the cluster creation. Why? Because a bootstrap action runs 
+# on every nodes, which is required to install Anaconda on all nodes.
 #
 # Don't forget to update the section "User Parameter"
 #
@@ -70,6 +71,7 @@ echo 'export PYSPARK_PYTHON="/home/hadoop/conda/bin/python3.5"' >> $HOME/.bashrc
 echo 'export SPARK_HOME=/usr/lib/spark' >> $HOME/.bashrc
 echo 'export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.10.6-src.zip:$PYTHONPATH' >> $HOME/.bashrc
 echo 'export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH' >> $HOME/.bashrc
+source .bashrc
 
 
 # - - - - - - - - - - - - - On the Master Node  - - - - - - - - - - - - - - - # 
